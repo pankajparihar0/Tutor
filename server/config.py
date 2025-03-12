@@ -6,5 +6,5 @@ def conn_pinecorn():
     pc = Pinecone(api_key="key")
     return pc
 def conn_gemini():
-    client = genai.Client(api_key="AIzaSyBgXP2bVvfozVblBy9_fwJL4AIl5IcGBm4")
+    client = genai.Client(api_key="key")
     return client
