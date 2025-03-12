@@ -4,3 +4,4 @@ pinecone
 pypdf
 langchain
 google-genai 
+python-dotenv
