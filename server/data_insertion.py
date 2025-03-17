@@ -19,10 +19,10 @@ def to_text(path):
     return text
 
 # creating chuks
-def create_chunks(text):
+def create_chunks(text,book,chapter,cls):
     text_splitter = CharacterTextSplitter(
     separator = "\n",
-    chunk_size = 1000,
+    chunk_size = 5000,
     chunk_overlap  = 50
     )
     docs = text_splitter.create_documents([text])
@@ -32,7 +32,10 @@ def create_chunks(text):
         record = {
             "_id" :str(c),
             "page_content":x.page_content,
-            "metadata": """{"id":str(c)}"""
+            "Class"  :cls,
+            "Book"  : book,
+            "Chapter" : chapter
+            
         }
         c=c+1
         records.append(record)
@@ -54,7 +57,7 @@ def move_file(path):
 
     
 # function to insert the pdf into vector DB
-def inset_data(path):
+def inset_data(path,book,chapter,cls):
     pc  = conn_pinecorn()
     index_name = "dense-index"
     if not pc.has_index(index_name):
@@ -69,15 +72,16 @@ def inset_data(path):
         )
     
     pdf_text = to_text(path)
-    chunks = create_chunks(pdf_text)
+    chunks = create_chunks(pdf_text,book,chapter,cls)
     upload_chunks(chunks)
-    move_file(path)
+    return(chunks)
+    # move_file(path)
 
 
-files = os.listdir("./Data/Raw")
-print (len(files))
-if len(files) != 0:
-    for pdf in files:
-        inset_data("./Data/Raw/"+pdf)
+# files = os.listdir("./Data/Raw")
+# print (len(files))
+# if len(files) != 0:
+#     for pdf in files:
+#         inset_data("./Data/Raw/"+pdf)
 
     
